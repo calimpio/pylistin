@@ -1,0 +1,18 @@
+[project]
+name = "pylistin"
+version = "0.0.3"
+authors = [
+  { name="Camilo Barbosa", email="cab331@hotmail.com" },
+]
+license = {text= "MIT"}
+description = "Functions to work with list in python"
+readme = "README.md"
+requires-python = ">=3.10.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+[project.urls]
+Homepage = "https://github.com/calimpio/pylistin"
+Issues = "https://github.com/calimpio/pylistin/issues"
