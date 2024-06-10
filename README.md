@@ -5,6 +5,9 @@ Functions to work with list in python
 # Install
 - `pip install pylistin`
 
+# Update to last version
+- `pip install pylistin --upgrade`
+
 # API
 
 ## list_reduce `<E, T>(list: list[E], callback: (ac: T, item: E, index?: int, list?: list[E]) -> T,  ac_init: T = 0) -> T `
