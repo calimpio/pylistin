@@ -7,7 +7,7 @@ Functions to work with list in python
 
 # API
 
-## list_reduce `<E, T>(list: list[E], callback: (ac: T, item: E, index?: int, list?: list[E]) -> T,  ac_init: T) -> T `
+## list_reduce `<E, T>(list: list[E], callback: (ac: T, item: E, index?: int, list?: list[E]) -> T,  ac_init: T = 0) -> T `
 
 For each all list elements with a `lamda` function or `def` as callback for return a one result.
 This function is used to loop through a list and accumulate a value.
@@ -50,7 +50,7 @@ print(list_filter([
 
 ```
 
-## list_group `<E, T>(list: list[E], callback: (item?: E, index?: int, list?: list[E]) -> T, columns: int ) -> list[T] `
+## list_group `<E, T>(list: list[E], callback: (item?: E, rows?: list, last_row?: int, this_column?: int , index?: int, list?: list[E]) -> T, columns: int ) -> list[T] `
 
 For each all list elements with a `lamda` function or `def` as callback for agruping a list in rows and columns.
 
@@ -62,6 +62,12 @@ print(list_group([4,5,9,2,5,9,1,2,3], lambda item: item, 3))
 # [[4, 5, 9], [2, 5, 9], [1, 2, 3]]
 
 ```
+
+# Updates
+
+### [0.0.5] changes
+- implement a `for item in list` without `range` in `list_reduce` and `list_group`.
+- reducing the exceptions and determinate the arguments of `callbacks`.
 
 
 # Lisence
