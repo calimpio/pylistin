@@ -1,4 +1,5 @@
 from typing import Callable, TypeVar
+
 import inspect
 
 E = TypeVar('E')
@@ -11,14 +12,7 @@ def list_reduce(list: list[E], callback: Callable[[T, E, int, list[E]],T], ac_in
     i = 0
     args = len(inspect.getfullargspec(callback).args)
     for item in list:       
-        if args == 2:
-            ac = callback(ac, item) 
-        elif args == 3:
-            ac = callback(ac, item, i)
-        elif args == 4:
-            ac = callback(ac, item, i, list)       
-        else:
-            raise Exception("callback has need minum 2 arguments and maximun 4.")
+        ac = callback(*__get_params(args, 2, ac, item, i, list)) 
         i += 1      
     return ac
 
@@ -26,16 +20,7 @@ def list_reduce(list: list[E], callback: Callable[[T, E, int, list[E]],T], ac_in
 def list_map(list: list[E], callback: Callable[[E, int, list[E]],T])->list[T]:
     args = len(inspect.getfullargspec(callback).args)
     def callback_map(ac, e, i, list): 
-        if args == 0:
-           ac.append(callback()) 
-        elif args == 1:
-            ac.append(callback(e))  
-        elif args == 2:
-            ac.append(callback(e, i))    
-        elif args == 3:
-            ac.append(callback(e, i, list))       
-        else:
-            raise Exception("callback has need minum 0 arguments and maximun 3.")
+        ac.append(callback(*__get_params(args, 0, e, i, list)))
         return ac
     return list_reduce(list, callback_map, [])
 
@@ -44,20 +29,8 @@ def list_map(list: list[E], callback: Callable[[E, int, list[E]],T])->list[T]:
 def list_filter(list: list[E], callback: Callable[[E, int, list[E]],bool])->list[E]:
     args = len(inspect.getfullargspec(callback).args)
     def callback_map(ac, e, i, list):
-        if args == 0:
-            if(callback()):
-                ac.append(e)
-        elif args == 1:
-            if(callback(e)):
-                ac.append(e)
-        elif args == 2:
-            if(callback(e, i)):
-                ac.append(e)
-        elif args == 3:
-            if callback(e, i, list):
-                ac.append(e)        
-        else:
-            raise Exception("callback has need minum 0 arguments and maximun 3.")
+        if callback(*__get_params(args, 0, e, i, list)):
+            ac.append(e)  
         return ac
     return list_reduce(list, callback_map, [])
 
@@ -69,23 +42,7 @@ def list_group(list: list[E], callback: Callable[[E, list[list[T]], int, int, in
     i = 0
     args = len(inspect.getfullargspec(callback).args)
     for item in list:
-        if args == 0:
-            cols.append(callback())
-        elif args == 1:
-            cols.append(callback(item))
-        elif args == 2:
-            cols.append(callback(item, rows))
-        elif args == 3:
-            cols.append(callback(item, rows, len(rows)-1)) 
-        elif args == 4:
-            cols.append(callback( item,rows, len(rows)-1, c)) 
-        elif args == 5:
-            cols.append(callback( item, rows, len(rows)-1, c, i))
-        elif args == 6:
-            cols.append(callback(item, rows, len(rows)-1, c, i, list))
-        else:
-            raise Exception("callback has need minum 0 arguments and maximun 6.")   
-            
+        cols.append(callback(*__get_params(args, 0, item, rows, len(rows)-1, c, i, list)))          
         c += 1
         i += 1
         if c == columns:
@@ -97,5 +54,9 @@ def list_group(list: list[E], callback: Callable[[E, list[list[T]], int, int, in
     return rows
 
 
+def __get_params(args, min, *params):
+    if args >= min and args <= len(params):
+        return [params[i] for i in range(args)]
+    raise Exception("Callback has need minum "+min+" arguments and maximun "+len(params)+".")
 
 
